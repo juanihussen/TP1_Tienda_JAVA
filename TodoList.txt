@@ -1,0 +1,24 @@
+
+PARTE I
+
+Para esta tienda, todos los productos que se consideran comestibles tendrán una fecha de vencimiento y
+calorías.
+
+Descuentos
+
+Aumentar cant por unidad al comprar con el mismo nombre
+
+CREAR EXCEPCIONES !!!!!!!!!!!!!!!!!!!!
+
+PARTE II
+
+TODO
+
+PARTE III
+
+TODO
+
+PARTE IV
+
+TODO
+
