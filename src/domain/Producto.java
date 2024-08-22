@@ -2,6 +2,7 @@ package domain;
 
 import exceptions.SinGananciasException;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public abstract class Producto {
@@ -11,7 +12,7 @@ public abstract class Producto {
     protected int cantStock;
     protected float precioUnidad;
     protected float ganancia;
-    public boolean disponible;
+    private boolean disponible;
 
     public Producto(String id, String nombre, String descripcion, int cantStock, float precioUnidad, float ganancia) {
         if ((ganancia <= precioUnidad) && (cantStock<=0)) {
@@ -23,7 +24,7 @@ public abstract class Producto {
             this.cantStock = cantStock;
             this.precioUnidad = precioUnidad;
             this.ganancia = ganancia;
-            this.disponible = false;
+            this.disponible = true;
         }
     }
 
@@ -37,6 +38,15 @@ public abstract class Producto {
 
     public int getCantStock() {
         return cantStock;
+    }
+
+    public boolean getDisponible(){
+        return disponible;
+    }
+
+
+    public void setCantStock(int cantStock) {
+        this.cantStock = cantStock;
     }
 
     public float getPrecioUnidad() {
@@ -73,14 +83,16 @@ public abstract class Producto {
 
     @Override
     public String toString() {
-        return "Producto{" +
-                "id='" + id + '\'' +
-                ", nombre='" + nombre + '\'' +
-                ", descripcion='" + descripcion + '\'' +
-                ", cantStock=" + cantStock +
-                ", precioUnidad=" + precioUnidad +
-                ", ganancia=" + ganancia +
-                ", disponible=" + disponible +
-                '}';
+        return " id= " + id + "\n" +
+                " nombre= " + nombre + '\n' +
+                " descripcion='" + descripcion + '\n'+
+                " cantStock=" + cantStock + '\n' +
+                " precioUnidad=" + precioUnidad + '\n' +
+                " ganancia=" + ganancia + '\n' +
+                " disponible=" + disponible;
+    }
+
+    public Object getPrecio() {
+        return null;
     }
 }

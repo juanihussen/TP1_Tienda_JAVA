@@ -1,9 +1,9 @@
 package exceptions;
 
-public class CantidadDeStockNoPermitido extends RuntimeException{
+public class CantidadDeStockNoPermitidoException extends RuntimeException{
     private int cantStockExcedido;
 
-    public CantidadDeStockNoPermitido(int cantStockExcedido) {
+    public CantidadDeStockNoPermitidoException(int cantStockExcedido) {
         this.cantStockExcedido = cantStockExcedido;
     }
 

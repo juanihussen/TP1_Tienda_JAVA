@@ -1,16 +1,13 @@
 
-PARTE I
 
-Para esta tienda, todos los productos que se consideran comestibles tendrán una fecha de vencimiento y
-calorías.
 
-Descuentos
 
-Aumentar cant por unidad al comprar con el mismo nombre
 
-CREAR EXCEPCIONES !!!!!!!!!!!!!!!!!!!!
 
-PARTE II
+Segunda Parte
+
+- El porcentaje de descuento de las bebidas no podrá superar el 10%, el de los envasados el 15% y
+el de los productos de limpieza el 20%
 
 TODO
 
