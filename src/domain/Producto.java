@@ -4,17 +4,19 @@ import exceptions.SinGananciasException;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLongArray;
 
-public abstract class Producto {
+public abstract class Producto implements Cloneable{
     protected String id;
     public String nombre;
     public String descripcion;
     protected int cantStock;
-    protected float precioUnidad;
-    protected float ganancia;
+    private float precioUnidad;
+    private float ganancia;
     private boolean disponible;
+    private double descuento;
 
-    public Producto(String id, String nombre, String descripcion, int cantStock, float precioUnidad, float ganancia) {
+    public Producto(String id, String nombre, String descripcion, int cantStock, float precioUnidad, float ganancia,double descuento) {
         if ((ganancia <= precioUnidad) && (cantStock<=0)) {
             throw new SinGananciasException(precioUnidad,ganancia);
         }else{
@@ -25,7 +27,13 @@ public abstract class Producto {
             this.precioUnidad = precioUnidad;
             this.ganancia = ganancia;
             this.disponible = true;
+            this.descuento = descuento;
         }
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     public String getId() {
@@ -44,6 +52,9 @@ public abstract class Producto {
         return disponible;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
 
     public void setCantStock(int cantStock) {
         this.cantStock = cantStock;
@@ -53,32 +64,37 @@ public abstract class Producto {
         return precioUnidad;
     }
 
+    public void setPrecioUnidad(float precioUnidad) {
+        this.precioUnidad = precioUnidad;
+    }
+
     public float getGanancia() {
         return ganancia;
-    }
-
-    public void setGanancia(float ganancia) {
-        this.ganancia = ganancia;
-    }
-
-    public boolean isDisponible() {
-        return disponible;
     }
 
     public void setDisponible(boolean disponible) {
         this.disponible = disponible;
     }
 
+    public double getDescuento() {
+        return descuento;
+    }
+
+    public void setDescuento(double descuento) {
+        this.descuento = descuento;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Producto producto)) return false;
-        return cantStock == producto.cantStock && Float.compare(precioUnidad, producto.precioUnidad) == 0 && Float.compare(ganancia, producto.ganancia) == 0 && disponible == producto.disponible && Objects.equals(id, producto.id) && Objects.equals(nombre, producto.nombre) && Objects.equals(descripcion, producto.descripcion);
+        if (o == null || getClass() != o.getClass()) return false;
+        Producto producto = (Producto) o;
+        return id.equals(producto.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nombre, descripcion, cantStock, precioUnidad, ganancia, disponible);
+        return Objects.hash(id);
     }
 
     @Override
@@ -88,7 +104,7 @@ public abstract class Producto {
                 " descripcion='" + descripcion + '\n'+
                 " cantStock=" + cantStock + '\n' +
                 " precioUnidad=" + precioUnidad + '\n' +
-                " ganancia=" + ganancia + '\n' +
+                " ganancia=" + ganancia + "%" + '\n' +
                 " disponible=" + disponible;
     }
 

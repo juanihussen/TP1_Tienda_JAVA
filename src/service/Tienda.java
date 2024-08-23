@@ -9,6 +9,7 @@ import exceptions.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Tienda {
 
@@ -29,6 +30,12 @@ public class Tienda {
     }
 
     public void menu() {
+        Producto producto1 = new ProductosLimpieza("AZ123","Mr.Musculo","Deja que el mr haga lo suyo",10,2F,10, AplicacionLimpieza.BANIO,10);
+        Producto producto2 = new Bebidas("AC123","Coca-Cola","Que rico!",10,2F,10,23.4F,true, LocalDate.of(2025,8,1),300,8);
+        Producto producto3 = new ProductosEnvasados("AB123","Mermelada","Sabor Duraznito!",10,2F,10,"Botella",true,LocalDate.of(2025,2,5),200,10);
+        Producto galletitas = new ProductosEnvasados("AB123", "oreos", "Galletitas de chocolate y crema", 1, 2F, 10,"Plastico",  true,LocalDate.of(2024,9,3),200,8);
+        ArrayList<Producto> ordenDeCompra = new ArrayList<>();
+
         int opcion;
         do {
             Scanner scanner = new Scanner(System.in);
@@ -36,34 +43,79 @@ public class Tienda {
                     "*************************\n" +
                             "*   Menú de Opciones    *\n" +
                             "*************************\n" +
-                            "* 1. Testear Compras *\n" +
-                            "* 2. Testear Ventas  *\n" +
-                            "* 3. Mostrar Stock   *\n" +
-                            "* 4.     Salir       *\n" +
+                            "* 1. Compra de productos sin espacio de stock.  *\n" +
+                            "* 2. Compra de productos sin saldo en la caja suficiente.  *\n" +
+                            "* 3. Compra de producto satifactoria.  *\n" +
+                            "* 4. Venta con unidades mayor a las disponibles.  *\n" +
+                            "* 5. Venta de mas de 3 productos.   *\n" +
+                            "* 6. Venta de producto no disponible para la venta.  *\n" +
+                            "* 7. Venta de productos satifactoria.  *\n" +
+                            "* 8. Obtener lista de productos con descuento menor a 15.  *\n" +
+                            "* 9. Mostrar Stock    *\n" +
+                            "* 10.     Salir       *\n" +
                             "*************************\n" +
                             "  Seleccione una opción:  "
-
             );
             opcion = scanner.nextInt();
 
             switch (opcion) {
                 case 1:
-                    compraProductosMenu();
+                    Producto productoError = new ProductosLimpieza("AZ123","Mr.Musculo","Deja que el mr haga lo suyo",1000,2F,10, AplicacionLimpieza.BANIO,10);
+                    compraProductos(productoError);
                     break;
                 case 2:
-                    ventaProductoMenu();
+                    Producto productoMuyCaro = new ProductosLimpieza("AZ123","Mr.Musculo","Deja que el mr haga lo suyo",10,2000,10, AplicacionLimpieza.BANIO,10);
+                    compraProductos(productoMuyCaro);
                     break;
                 case 3:
-                    mostrarProductos(stock);
+                    compraProductos(producto1);
+                    compraProductos(producto2);
+                    compraProductos(producto3);
+                    compraProductos(galletitas);
+                    System.out.println("La compra se realizo con exito !!!");
                     break;
                 case 4:
+                    Producto productoCantMas12 = new ProductosLimpieza("AZ123","Mr.Musculo","Deja que el mr haga lo suyo",13,2F,10, AplicacionLimpieza.BANIO,10);
+                    ordenDeCompra.add(productoCantMas12);
+                    venta(ordenDeCompra);
+                    ordenDeCompra.clear();
+                    break;
+                case 5:
+                    ordenDeCompra.add(producto1);
+                    ordenDeCompra.add(producto2);
+                    ordenDeCompra.add(producto3);
+                    ordenDeCompra.add(galletitas);
+                    venta(ordenDeCompra);
+                    ordenDeCompra.clear();
+                    break;
+                case 6:
+                    Producto galletitasExcedidas = new ProductosEnvasados("AB123", "oreos", "Galletitas de chocolate y crema", 5, 2F, 10,"Plastico",  true,LocalDate.of(2024,9,3),200,8);
+                    galletitas.setDisponible(false);
+                    ordenDeCompra.add(galletitasExcedidas);
+                    venta(ordenDeCompra);
+                    ordenDeCompra.clear();
+                    break;
+                case 7:
+                    compraProductos(producto1);
+                    compraProductos(producto3);
+                    ordenDeCompra.add(producto1);
+                    ordenDeCompra.add(producto3);
+                    venta(ordenDeCompra);
+                    break;
+                case 8:
+                    System.out.println(obtenerProductosConMenorDescuento(15));
+                    break;
+                case 9:
+                    mostrarProductos(stock);
+                    break;
+                case 10:
                     System.out.println("Salir.");
                     break;
                 default:
                     System.out.println("Opcion no valida.");
                     break;
             }
-        } while (opcion != 3);
+        } while (opcion != 10);
     }
 
     public void compraProductos(Producto producto) {
@@ -73,46 +125,8 @@ public class Tienda {
         compraUnProducto(producto);
     }
 
-    public void compraProductosMenu() {
-        int opcion;
-        do {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(
-                    "*************************\n" +
-                            "*   Menú de Compra    *\n" +
-                            "*************************\n" +
-                            "* 1. Compra de productos sin espacio de stock *\n" +
-                            "* 2. Compra de productos sin saldo en la caja suficiente  *\n" +
-                            "* 3. Compra de producto completa      *\n" +
-                            "* 4.       Salir          *\n" +
-                            "*************************\n" +
-                            "  Seleccione una opción:  "
-            );
-
-            opcion = scanner.nextInt();
-
-            switch (opcion) {
-                case 1:
-                    Producto misterMusculo = new ProductosLimpieza("AB123", "Mr.Musculo", "Deja que Mr haga lo suyo", 200, 1, 5,AplicacionLimpieza.BANIO);
-                    compraProductos(misterMusculo);
-                    break;
-                case 2:
-                    Producto coca = new Bebidas("AC123", "coca", "Diabetes!", 10, 2000F, 2F, 12.5F, true,LocalDate.of(2024,12,2),100);
-                    compraProductos(coca);
-                    break;
-                case 3:
-                    Producto galletitas = new ProductosEnvasados("AB123", "oreos", "Galletitas de chocolate y crema", 20, 5.5F, 10,"Plastico",  true,LocalDate.of(2024,9,3),200);
-                    compraProductos(galletitas);
-                    break;
-                default:
-                    System.out.println("Opcion no valida.");
-                    break;
-            }
-        } while (opcion != 4);
-    }
-
     public void verificacionStockMaximo(int cantStock) {
-        if (!(stockMaximo == 0) || !(stockMaximo < cantStock)) {
+        if ((stockMaximo == 0) || (stockMaximo < cantStock)) {
             throw new StockMaximoException(stockMaximo);
         }
     }
@@ -124,14 +138,22 @@ public class Tienda {
     }
 
     public void compraUnProducto(Producto producto) {
-        producto.setDisponible(true);
-        stock.add(producto);
-        saldoCaja -= (producto.getPrecioUnidad() * producto.getCantStock());
-        stockMaximo -= producto.getCantStock();
+        boolean flag = false;
+        for(Producto p : stock){
+            if(p.getNombre().equals(producto.getNombre())){
+                p.setCantStock(p.getCantStock() + producto.getCantStock());
+                flag = true;
+            }
+        }
+        if(!flag){
+            producto.setDisponible(true);
+            saldoCaja -= (producto.getPrecioUnidad() * producto.getCantStock());
+            stockMaximo -= producto.getCantStock();
+            producto.setPrecioUnidad(((producto.getPrecioUnidad() * producto.getGanancia()) / 100) + producto.getPrecioUnidad());
+            stock.add(producto);
+        }
     }
 
-
-    //modularizar con los metodos ya creados
     public void venta(ArrayList<Producto> productosAVender) {
         ArrayList<Producto> vendidos = new ArrayList<>();
         StringBuilder mensaje = new StringBuilder();
@@ -142,14 +164,13 @@ public class Tienda {
 
             verificacionCantidadDeStockNoPermitido(producto.getCantStock());
 
-            Producto productoEnStock = verificacionExistenciaProducto(producto);
-
-            verificacionSeEncontraron(productoEnStock,producto);
-
-            verificacionDisponibilidadProducto(productoEnStock);
-
-            verificacionCasoUnidadesSolicitadas(producto, productoEnStock, vendidos, mensaje);
-
+            for (Producto p : stock) {
+                if (p.getNombre().equals(producto.getNombre())) {
+                    verificacionDisponibilidadProducto(p);
+                    verificacionCasoUnidadesSolicitadas(producto, p, vendidos, mensaje);
+                    break;
+                }
+            }
         }
         mostrarImpresionDeVenta(vendidos);
         if (mensaje.length() > 0) {
@@ -157,131 +178,83 @@ public class Tienda {
         }
     }
 
-    public void ventaProductoMenu() {
-        Producto producto1 = new ProductosLimpieza("AZ123","Mr.Musculo","Deja que el mr haga lo suyo",1,2F,2F, AplicacionLimpieza.COCINA);
-        Producto producto2 = new Bebidas("AC123","Coca-Cola","Que rico!",1,1F,2F,23.4F,true, LocalDate.of(2025,8,1),300);
-        Producto producto3 = new ProductosEnvasados("AB123","Mermelada","Sabor Duraznito!",1,1F,2F,"Botella",true,LocalDate.of(2025,2,5),200);
-        ArrayList<Producto> ordenDeCompra = new ArrayList<>();
-
-        int opcion;
-        do {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(
-                    "*************************\n" +
-                            "*   Menú de Venta    *\n" +
-                            "*************************\n" +
-                            "* 1. Venta con unidades mayor a las disponibles *\n" +
-                            "* 2. Venta de mas de 3 productos  *\n" +
-                            "* 3. Venta de producto no disponible para la venta  *\n" +
-                            "* 4. Venta de producto y unidades disponibles a la venta     *\n" +
-                            "* 5.       Salir          *\n" +
-                            "*************************\n" +
-                            "  Seleccione una opción:  "
-            );
-            opcion = scanner.nextInt();
-            //crear ejemplos con los diferentes casos PARA TESTEAR JUANI DE MAÑANA.
-            switch (opcion) {
-                case 1:
-                    producto1.setCantStock(13);
-                    ordenDeCompra.add(producto1);
-                    venta(ordenDeCompra);
-                    break;
-                case 2:
-                    ordenDeCompra.add(producto1);
-                    ordenDeCompra.add(producto2);
-                    ordenDeCompra.add(producto3);
-                    ordenDeCompra.add(producto1);
-                    venta(ordenDeCompra);
-                    break;
-                case 3:
-                    ordenDeCompra.add(producto1);
-                    ordenDeCompra.add(producto1);
-                    venta(ordenDeCompra);
-                    break;
-                case 4:
-                    ordenDeCompra.add(producto1);
-                    ordenDeCompra.add(producto3);
-                    venta(ordenDeCompra);
-                    break;
-                default:
-                    System.out.println("Opcion no valida.");
-                    break;
-            }
-        } while (opcion != 5);
-    }
-
     public void verificacionMasDeTresProductos(int cantProductosAVender) {
         if(cantProductosAVender > 3){
             throw new MasDeTresProductosException(cantProductosAVender);
         }
     }
-    public void verificacionCantidadDeStockNoPermitido(int cantidadPedida) {
 
+    public void verificacionCantidadDeStockNoPermitido(int cantidadPedida) {
         if(cantidadPedida > 12){
             throw new CantidadDeStockNoPermitidoException(cantidadPedida);
         }
     }
+
     public void verificacionDisponibilidadProducto(Producto producto) {
         if (!producto.getDisponible() || producto.getCantStock() == 0){
             throw new ProductoNoDisponibleException(producto.getId(),producto.getNombre());
         }
     }
 
-    public Producto verificacionExistenciaProducto(Producto producto) {
-        Producto productoEnStock = null;
-
-        for (Producto p : stock) {
-            if (p.getNombre().equals(producto.getNombre())) {
-                productoEnStock = p;
-                break;
-            }
-        }
-        return productoEnStock;
-    }
-
-    public void verificacionSeEncontraron(Producto productoEnStock,Producto producto) {
-        if (productoEnStock == null) {
-            throw new NoSeEncontroElProductoException(producto.getNombre());
-        }
-    }
-
-    public void verificacionCasoUnidadesSolicitadas(Producto producto, Producto productoEnStock, ArrayList<Producto> vendidos, StringBuilder mensaje) {
-            verificacionDisponibilidadProducto(productoEnStock);
-            if (producto.getCantStock() <= productoEnStock.getCantStock()) {
+    public void verificacionCasoUnidadesSolicitadas(Producto producto, Producto p, ArrayList<Producto> vendidos, StringBuilder mensaje) {
+            verificacionDisponibilidadProducto(p);
+            if (producto.getCantStock() <= p.getCantStock()) {
                 vendidos.add(producto);
-                saldoCaja += (productoEnStock.getGanancia() * producto.getCantStock());
-                productoEnStock.setCantStock(productoEnStock.getCantStock() - producto.getCantStock());
-                darDeBajaProductoNoDisponible(productoEnStock);
+                saldoCaja += (p.getPrecioUnidad() * producto.getCantStock());
+                //p.setCantStock(p.getCantStock() - producto.getCantStock());
+                darDeBajaProductoNoDisponible(p);
             } else {
-                producto.setCantStock(productoEnStock.getCantStock());
+                producto.setCantStock(p.getCantStock());
                 vendidos.add(producto);
-                saldoCaja += (productoEnStock.getCantStock() * productoEnStock.getGanancia());
+                saldoCaja += (p.getCantStock() * p.getPrecioUnidad());
                 mensaje.append("Hay productos con stock disponible menor al solicitado.\n");
-                darDeBajaProductoNoDisponible(productoEnStock);
+                darDeBajaProductoNoDisponible(p);
             }
     }
 
     public void darDeBajaProductoNoDisponible(Producto productoEnStock) {
         if (productoEnStock.getCantStock() <= 0) {
+            // Actualiza el espacio disponible
+            this.stockMaximo += productoEnStock.getCantStock();
+
+            // Elimina el producto del stock
+            stock.remove(productoEnStock);
+
+            // Ajusta la cantidad a 0 y marca como no disponible
             productoEnStock.setCantStock(0);
             productoEnStock.setDisponible(false);
         }
     }
 
+
     public void mostrarProductos(ArrayList<Producto> stock) {
-        for (Producto producto : stock) {
-            System.out.println(producto);
+        System.out.println("**************************************************************\n Saldo de caja : " + this.saldoCaja + "   ||   " + " Espacio disponible : " + "(" + stockMaximo + ")  *\n" + "**************************************************************");
+        if(stock.size() == 0){
+            System.out.println("El stock esta vacio, ve y repone mercaderia");
+        }else{
+            for (Producto producto : stock) {
+                System.out.println(producto);
+            }
         }
     }
 
     public void mostrarImpresionDeVenta(ArrayList<Producto> productosVendidos) {
         double total = 0.0;
         for (Producto producto : productosVendidos) {
-            double subtotal = producto.getCantStock() * producto.getPrecioUnidad();
+            double subtotal = (producto.getCantStock() * producto.getPrecioUnidad());
             System.out.println(producto.getId() + " " + producto.descripcion + " " + producto.getCantStock() + " x " + producto.getPrecioUnidad());
             total += subtotal;
         }
         System.out.println("TOTAL VENTA: " + total);
+    }
+
+    public String obtenerProductosConMenorDescuento(double porcentajeDescuento) {
+        return stock.stream()
+                .filter(p -> p instanceof ProductosEnvasados || p instanceof Bebidas)
+                .filter(p -> p.getDescuento() < porcentajeDescuento)
+                .map(Producto::getNombre)
+                .map(String::toUpperCase)
+                .collect(Collectors.joining(","));
     }
 }
 
