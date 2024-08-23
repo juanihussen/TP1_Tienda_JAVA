@@ -214,18 +214,12 @@ public class Tienda {
 
     public void darDeBajaProductoNoDisponible(Producto productoEnStock) {
         if (productoEnStock.getCantStock() <= 0) {
-            // Actualiza el espacio disponible
             this.stockMaximo += productoEnStock.getCantStock();
-
-            // Elimina el producto del stock
             stock.remove(productoEnStock);
-
-            // Ajusta la cantidad a 0 y marca como no disponible
             productoEnStock.setCantStock(0);
             productoEnStock.setDisponible(false);
         }
     }
-
 
     public void mostrarProductos(ArrayList<Producto> stock) {
         System.out.println("**************************************************************\n Saldo de caja : " + this.saldoCaja + "   ||   " + " Espacio disponible : " + "(" + stockMaximo + ")  *\n" + "**************************************************************");
